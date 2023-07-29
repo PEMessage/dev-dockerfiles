@@ -1,0 +1,101 @@
+FROM alpine:3.18
+ARG USER=dev
+ARG PASS="dev"
+
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update
+RUN apk update
+
+# build-base
+# (1/22) Upgrading musl (1.2.4-r0 -> 1.2.4-r1)
+# (2/22) Installing libgcc (12.2.1_git20220924-r10)
+# (3/22) Installing libstdc++ (12.2.1_git20220924-r10)
+# (4/22) Installing zstd-libs (1.5.5-r4)
+# (5/22) Installing binutils (2.40-r7)
+# (6/22) Installing libmagic (5.45-r0)
+# (7/22) Installing file (5.45-r0)
+# (8/22) Installing libgomp (12.2.1_git20220924-r10)
+# (9/22) Installing libatomic (12.2.1_git20220924-r10)
+# (10/22) Installing gmp (6.2.1-r3)
+# (11/22) Installing isl26 (0.26-r1)
+# (12/22) Installing mpfr4 (4.2.0_p12-r0)
+# (13/22) Installing mpc1 (1.3.1-r1)
+# (14/22) Installing gcc (12.2.1_git20220924-r10)
+# (15/22) Installing libstdc++-dev (12.2.1_git20220924-r10)
+# (16/22) Installing musl-dev (1.2.4-r1)
+# (17/22) Installing libc-dev (0.7.2-r5)
+# (18/22) Installing g++ (12.2.1_git20220924-r10)
+# (19/22) Installing make (4.4.1-r1)
+# (20/22) Installing fortify-headers (1.1-r3)
+# (21/22) Installing patch (2.7.6-r10)
+# (22/22) Installing build-base (0.5-r3)
+
+        
+# (1/8) Installing ncurses-terminfo-base (6.4_p20230506-r0)
+# (2/8) Installing libncursesw (6.4_p20230506-r0)
+# (3/8) Installing libformw (6.4_p20230506-r0)
+# (4/8) Installing libmenuw (6.4_p20230506-r0)
+# (5/8) Installing libpanelw (6.4_p20230506-r0)
+# (6/8) Installing libncurses++ (6.4_p20230506-r0)
+# (7/8) Installing pkgconf (1.9.5-r0)
+# (8/8) Installing ncurses-dev (6.4_p20230506-r0)
+
+# (1/7) Installing groff (1.22.4-r4)
+# (2/7) Installing less (633-r0)
+# (3/7) Installing gdbm (1.23-r1)
+# (4/7) Installing libintl (0.21.1-r7)
+# (5/7) Installing libpipeline (1.5.7-r0)
+# (6/7) Installing libseccomp (2.5.4-r2)
+# (7/7) Installing man-db (2.11.2-r1)
+
+RUN apk add build-base \
+        cmake \
+        ncurses-dev \
+        ncurses-static \
+        ca-certificates \
+        wget curl \
+        sed gawk
+
+# Dev tools
+RUN apk add man-db man-db-doc \
+        linux-headers \
+        musl-dev musl-utils \
+        qemu-system-x86_64 \
+        qemu-system-aarch64
+
+
+
+RUN apk add \
+        git \
+        tmux \
+        nvim \
+        bat \
+        fzf \
+        ripgrep \
+        github-cli \
+        zsh bash \
+        chezmoi \
+        bear bear-doc ccls
+
+# adduser [OPTIONS] USER [GROUP]
+#
+# Create new user, or add USER to GROUP
+#
+#      -h --home DIR           Home directory
+#      -g --gecos GECOS        GECOS field
+#      -s --shell SHELL        Login shell named SHELL by example /bin/bash
+#      -G --ingroup GRP        Group (by name)
+#      -S --system             Create a system user
+#      -D --disabled-password  Don't assign a password, so cannot login
+#      -H --no-create-home     Don't create home directory
+#      -u --uid UID            User id
+#      -k SKEL                 Skeleton directory (/etc/skel)
+RUN apk add sudo &&\
+    addgroup $USER &&\
+    aadduser -D -s /bin/zsh $USER && echo "$USER:$PASS" | chpasswd &&\
+    echo "$USER ALL=(ALL) ALL" > /etc/sudoers.d/$USER && chmod 0440 /etc/sudoers.d/$NEWUSER 
+
+USER $USER
+
+RUN git config --global user.name="$USER" &&\
+    git config --global user.email="${USER}@mail.com" 
+RUN chezmoi init pemessage/chezmoi-dotfiles --branch linux --apply

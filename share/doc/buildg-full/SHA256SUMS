@@ -1,0 +1,6 @@
+1a82b344171be308e0ce443cda8ec38fa0a67ef80f30c6deca8f9d4bf7242ef1  ./bin/buildg
+dd96df2394c580e40c754593529241cbd115d806ee8dbd4312cfa2ffeec53a5f  ./bin/rootlessctl
+1facb926a820d86069d6fc478f22d92c374551e3e272eda2711447ff6e4842fe  ./bin/rootlesskit
+1447a2e2ccc62e8012b826ed03e26acc4031ed72ac8bebca145fc4da2bb5ccd0  ./bin/runc
+11080fdfb2c47b99f2b0c2b72d92cc64400d0eaba11c1ec34f779e17e8844360  ./bin/slirp4netns
+189dca9d85a40bf8c9ae8f5956f1c808a5af3d908e0a9aa9891ab96934a1dba3  ./share/doc/buildg-full/README.md
